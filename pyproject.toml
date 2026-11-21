@@ -1,0 +1,36 @@
+# This project is an application, not an installable package. Build tools such
+# as Cloudflare Workers Builds run `pip install .` on a root pyproject.toml, so
+# declare "no Python packages" explicitly; otherwise setuptools' auto-discovery
+# trips over backend/, frontend/ and node_modules/.
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = []
+
+[project]
+name = "ai-search-playground"
+version = "0.2.0"
+description = "Cloudflare Python Workers + FastAPI backend for the AI Search Playground"
+requires-python = ">=3.12"
+dependencies = [
+  "fastapi",
+  "pydantic",
+]
+
+[dependency-groups]
+dev = [
+  "workers-py",
+  "workers-runtime-sdk",
+  "pytest",
+  "httpx",
+]
+
+[tool.uv]
+# Dependencies only; there is no package to build or install.
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["backend"]
