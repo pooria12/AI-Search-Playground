@@ -1,0 +1,26 @@
+{
+  "bfs": {
+    "expanded": 380,
+    "cost": 37.0,
+    "found": true
+  },
+  "greedy": {
+    "expanded": 147,
+    "cost": 51.0,
+    "found": true
+  },
+  "astar": {
+    "expanded": 283,
+    "cost": 37.0,
+    "found": true
+  },
+  "hill_climbing": {
+    "expanded": 12,
+    "cost": 0.0,
+    "found": false
+  },
+  "map": {
+    "rows": 15,
+    "cols": 30
+  }
+}

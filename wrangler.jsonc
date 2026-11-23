@@ -1,0 +1,44 @@
+// Cloudflare Workers configuration for AI Search Playground.
+// Single-origin deployment: the Python Worker serves the API (/api/*) and
+// proxies every other request to the built React app (Workers Static Assets).
+{
+  "$schema": "https://schemas.cloudflare.com/workers/v4/configuration.json",
+  "name": "algorithm",
+  "main": "backend/main.py",
+  // Set to a recent date when you deploy.
+  "compatibility_date": "2026-11-01",
+  "compatibility_flags": ["python_workers"],
+
+  // Plain `wrangler deploy` does not install Python packages, so the Worker
+  // fails validation with "No module named 'workers'". `pywrangler deploy` runs
+  // this same sync first; running it here makes either command work.
+  "build": {
+    "command": "uv run pywrangler sync"
+  },
+
+  "assets": {
+    "directory": "./frontend/dist",
+    "binding": "ASSETS",
+    // Run the Worker first so /api/* always beats a static file.
+    "run_worker_first": true,
+    // Direct navigation / refresh of client-side routes returns index.html.
+    "not_found_handling": "single-page-application"
+  },
+
+  // Server-side limits (read per request by backend/src/api/limits.py).
+  // Override locally via .dev.vars; never put secrets here.
+  "vars": {
+    "SEARCH_MAX_EXPANDED_NODES": "20000",
+    "SEARCH_MAX_GENERATED_NODES": "50000",
+    "SEARCH_MAX_EVENTS": "20000",
+    "SEARCH_MAX_GRID_COLS": "60",
+    "SEARCH_MAX_GRID_ROWS": "40",
+    "SEARCH_TIMEOUT_MS": "8000",
+    "DEFAULT_GRID_COLS": "20",
+    "DEFAULT_GRID_ROWS": "15"
+  },
+
+  "observability": {
+    "enabled": true
+  }
+}
